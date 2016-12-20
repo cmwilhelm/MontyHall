@@ -1,3 +1,5 @@
+#!/usr/bin/env scala
+
 import scala.util.Random
 
 abstract class Door()
@@ -11,26 +13,20 @@ object MontyHall {
   val seed = new Random
   val possibilities = Vector(One(), Two(), Three())
 
-  def chooseDoor(): Door = possibilities(seed nextInt possibilities.length)
+  def chooseDoor(possibilities: Seq[Door]): Door = {
+    possibilities(seed nextInt possibilities.length)
+  }
 
   def chooseFinalDoor(setup: Setup): Door = setup match {
-    case Setup(a, b, false) => {
-      val remaining = possibilities diff (possibilities diff Vector(a, b))
-
-      remaining match {
-        case Vector(finalDoor) => finalDoor
-        case Vector(choice1, choice2) => {
-          if (this.seed.nextInt(1) == 1) choice1 else choice2
-        }
-      }
-    }
-
     case Setup(_, choice, true) => choice
+    case Setup(a, b, false) =>
+      val remaining = possibilities diff (possibilities diff Vector(a, b))
+      chooseDoor(remaining)
   }
 
   def getSetup(stickWithIt: Boolean): Setup = Setup(
-    carBehind   = chooseDoor(),
-    choice      = chooseDoor(),
+    carBehind   = chooseDoor(possibilities),
+    choice      = chooseDoor(possibilities),
     stickWithIt = stickWithIt
   )
 
