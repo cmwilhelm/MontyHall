@@ -38,7 +38,7 @@ object MontyHall {
   }
 
   def percentSuccess(stickWithIt: Boolean, numRuns: Int): Double = {
-    val successes = Range(0, numRuns).count(_ => doRun(stickWithIt))
+    val successes = (0 to numRuns) count (_ => doRun(stickWithIt))
 
     successes.toDouble / numRuns.toDouble * 100.0
   }
